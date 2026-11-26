@@ -62,13 +62,13 @@ notifikasi push, multi-bahasa.
 | Grafik | **Recharts** (via shadcn `chart`) | Terintegrasi theme |
 | Form | **react-hook-form + zod** | Validasi ringan |
 | Auth | **Supabase Auth — Google OAuth** | Owner login pakai Gmail |
-| Realtime | **Supabase Realtime** (tabel `orders`, `payments`) | Order baru muncul tanpa refresh |
+| Update otomatis | **Polling TanStack Query (10 dtk)** | Order baru muncul tanpa refresh; Supabase Realtime menyusul setelah RLS aktif |
 | Backend | **Fastify** (pakai `apps/api` yang sudah ada) | Satu backend, tidak ada service baru |
 | DB | **Supabase Postgres + Prisma** (sudah ada) | Skema `orders`, `payments`, dst. sudah tersedia |
 | Deploy | FE: Vercel/Cloudflare Pages · API: tetap seperti sekarang | |
 
 **Pembagian tugas FE ↔ BE:**
-- **Baca data** (list order, grafik): FE → Supabase langsung, diamankan **RLS** per `tenant_id` + role.
+- **Baca data** (list order, detail, grafik): FE → Fastify `/admin/*`, difilter per `tenantId` + role di kode. (Rencana awal: baca langsung ke Supabase dengan RLS — ditunda karena API AI Agent memakai anon key; RLS baru aman setelah `SUPABASE_SERVICE_KEY` dipakai API.)
 - **Aksi sensitif** (approve pembayaran, assign, ubah status): FE → Fastify `/admin/*`; Fastify memverifikasi
   **JWT Supabase**, cek role, lalu menulis DB + `activity_logs`. Jadi aturan bisnis ada di satu tempat.
 
@@ -124,7 +124,7 @@ Warna status terpisah: hijau (paid/done), kuning (pending), merah (failed/cancel
 **Perubahan skema yang dibutuhkan** (`packages/db/prisma/schema.prisma`):
 - `User.passwordHash` → opsional (login via Google).
 - `User.authUserId` (uuid Supabase), `User.isActive`.
-- `Payment`: tambah `approvedBy`, `approvedAt`, `rejectReason`, `proofUrl` (opsional, bukti transfer/QRIS).
+- Tabel baru `order_events` (timeline: siapa approve/reject, penugasan, perubahan status) — `add_order_events.sql`. Pelaku & alasan reject disimpan di sini, bukan di kolom `payments`.
 - `Order.assignedTo` sudah ada → pakai apa adanya.
 
 ---
@@ -162,10 +162,13 @@ Aturan auto-assign v1.0 (sederhana, bisa diubah owner):
 | Method | Path | Fungsi |
 |--------|------|--------|
 | GET | `/admin/me` | Profil + role + tenant |
-| POST | `/admin/payments/:id/approve` | Approve → set paid + auto-assign |
-| POST | `/admin/payments/:id/reject` | Reject + alasan |
+| GET | `/admin/orders?status=` | Daftar order (staff: miliknya + belum ditugaskan) |
+| GET | `/admin/orders/:id` | Detail order + item + pembayaran |
+| POST | `/admin/payments/:id/approve` | Approve → payment & order PAID + auto-assign |
+| POST | `/admin/payments/:id/reject` | Reject + alasan → order CANCELLED, stok dikembalikan |
 | POST | `/admin/orders/:id/assign` | Override penugasan (owner) |
-| PATCH | `/admin/orders/:id/status` | Update progress |
+| PATCH | `/admin/orders/:id/status` | Maju satu langkah: PAID→PROCESSING→SHIPPED→DONE |
+| GET | `/admin/assignees` | Daftar petugas untuk dropdown (owner) |
 | GET | `/admin/stats/sales?range=` | Agregat grafik (omzet, jumlah order, top produk) |
 | POST/PATCH | `/admin/team` | Undang & aktif/nonaktifkan karyawan (owner) |
 

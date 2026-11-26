@@ -17,7 +17,8 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, {
     ...init,
     headers: {
-      'Content-Type': 'application/json',
+      // Fastify menolak body kosong bila Content-Type JSON (400), jadi kirim hanya jika ada body.
+      ...(init.body ? { 'Content-Type': 'application/json' } : {}),
       ...init.headers,
       Authorization: `Bearer ${data.session?.access_token ?? ''}`,
     },
