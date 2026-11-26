@@ -1,0 +1,149 @@
+/* Wira Admin theme — derived from ref/color_palette.png
+ *
+ *   #010736  Midnight   (deepest navy)
+ *   #0D1C42  Navy       (surfaces in dark mode)
+ *   #22396F  Royal      (primary / accent)
+ *   #FCF1D0  Cream      (background in light mode)
+ *
+ * Drop-in for shadcn/ui (Tailwind v4, `@theme inline` tokens). Import from src/index.css.
+ * Light = cream paper + navy ink. Dark = midnight + cream ink.
+ */
+
+:root {
+  --radius: 0.75rem;
+
+  /* palette */
+  --midnight: #010736;
+  --navy: #0d1c42;
+  --royal: #22396f;
+  --cream: #fcf1d0;
+
+  /* light */
+  --background: #fdf8e8;            /* cream, lightened for large areas */
+  --foreground: #010736;
+  --card: #ffffff;
+  --card-foreground: #010736;
+  --popover: #ffffff;
+  --popover-foreground: #010736;
+  --primary: #22396f;
+  --primary-foreground: #fcf1d0;
+  --secondary: #fcf1d0;
+  --secondary-foreground: #0d1c42;
+  --muted: #f6ecc9;
+  --muted-foreground: #5a6485;
+  --accent: #efe3b8;
+  --accent-foreground: #0d1c42;
+  --border: #e6dbb0;
+  --input: #e6dbb0;
+  --ring: #22396f;
+
+  /* status (order / payment badges) */
+  --success: #2f7d5b;
+  --warning: #b7791f;
+  --destructive: #b3372f;
+  --info: #22396f;
+
+  /* charts: one hue family, ordered by lightness */
+  --chart-1: #22396f;
+  --chart-2: #5b72a8;
+  --chart-3: #9aa9cc;
+  --chart-4: #c9a64a;
+  --chart-5: #0d1c42;
+
+  /* sidebar */
+  --sidebar: #0d1c42;
+  --sidebar-foreground: #fcf1d0;
+  --sidebar-primary: #fcf1d0;
+  --sidebar-primary-foreground: #010736;
+  --sidebar-accent: #22396f;
+  --sidebar-accent-foreground: #fcf1d0;
+  --sidebar-border: #22396f;
+  --sidebar-ring: #fcf1d0;
+}
+
+.dark {
+  --background: #010736;
+  --foreground: #fcf1d0;
+  --card: #0d1c42;
+  --card-foreground: #fcf1d0;
+  --popover: #0d1c42;
+  --popover-foreground: #fcf1d0;
+  --primary: #fcf1d0;
+  --primary-foreground: #010736;
+  --secondary: #22396f;
+  --secondary-foreground: #fcf1d0;
+  --muted: #0d1c42;
+  --muted-foreground: #a3add0;
+  --accent: #22396f;
+  --accent-foreground: #fcf1d0;
+  --border: #22396f;
+  --input: #22396f;
+  --ring: #fcf1d0;
+
+  --success: #5fbf94;
+  --warning: #e0b04f;
+  --destructive: #e5736b;
+  --info: #9aa9cc;
+
+  --chart-1: #fcf1d0;
+  --chart-2: #9aa9cc;
+  --chart-3: #5b72a8;
+  --chart-4: #e0b04f;
+  --chart-5: #22396f;
+
+  --sidebar: #010736;
+  --sidebar-foreground: #fcf1d0;
+  --sidebar-primary: #fcf1d0;
+  --sidebar-primary-foreground: #010736;
+  --sidebar-accent: #0d1c42;
+  --sidebar-accent-foreground: #fcf1d0;
+  --sidebar-border: #22396f;
+  --sidebar-ring: #fcf1d0;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  body { @apply bg-background text-foreground font-sans antialiased; }
+}
